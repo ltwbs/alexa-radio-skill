@@ -15,7 +15,7 @@ const LaunchRequestHandler = {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     handle(handlerInput) {
-        const speakOutput = 'Welcome, you can say "play audio" to start listening to music. What would you like to do?';
+        const speakOutput = 'Welcome, you can say "play my radio" to start listening to music. What would you like to do?';
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -38,7 +38,7 @@ const PlayAudioIntentHandler = {
 
         const speakOutput = 'Playing the audio stream.';
         const playBehavior = 'REPLACE_ALL';
-        const podcastUrl = 'https://audio1.maxi80.com';
+        const podcastUrl = 'https://s9.yesstreaming.net:7014/stream.m3u';
         
         /**
          * If your audio file is located on the S3 bucket in a hosted skill, you can use the line below to retrieve a presigned URL for the audio file.
@@ -56,7 +56,8 @@ const PlayAudioIntentHandler = {
                 playBehavior,
                 podcastUrl,
                 playbackInfo.token,
-                playbackInfo.offsetInMilliseconds
+                //playbackInfo.offsetInMilliseconds
+                0
                 )
             .getResponse();
     }
@@ -111,7 +112,7 @@ const HelpIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
     },
     handle(handlerInput) {
-        const speakOutput = 'You can say "play audio" to start playing music! How can I help?';
+        const speakOutput = 'You can say "play my radio" to start playing music! How can I help?';
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -166,7 +167,8 @@ const AudioPlayerEventHandler = {
       case 'PlaybackStopped':
         playbackInfo.token = handlerInput.requestEnvelope.request.token;
         playbackInfo.inPlaybackSession = true;
-        playbackInfo.offsetInMilliseconds = handlerInput.requestEnvelope.request.offsetInMilliseconds;
+        //playbackInfo.offsetInMilliseconds = handlerInput.requestEnvelope.request.offsetInMilliseconds;
+        playbackInfo.offsetInMilliseconds = 0;
         break;
       case 'PlaybackNearlyFinished':
         break;
@@ -196,7 +198,7 @@ const PlaybackControllerHandler = {
   async handle(handlerInput) {
     const playbackInfo = await getPlaybackInfo(handlerInput);
     const playBehavior = 'REPLACE_ALL';
-    const podcastUrl = 'https://audio1.maxi80.com';
+    const podcastUrl = 'https://s9.yesstreaming.net:7014/stream.m3u';
     const playbackControllerEventName = handlerInput.requestEnvelope.request.type.split('.')[1];
     let response;
     switch (playbackControllerEventName) {
@@ -206,7 +208,8 @@ const PlaybackControllerHandler = {
                 playBehavior,
                 podcastUrl,
                 playbackInfo.token,
-                playbackInfo.offsetInMilliseconds
+                //playbackInfo.offsetInMilliseconds
+                0
                 )
             .getResponse();
         break;
